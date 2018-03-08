@@ -11,6 +11,14 @@ const CHAR_ENTER_SCOPE = "{"
 const CHAR_EXIT_SCOPE = "}"
 const CHAR_ESCAPE = "\""
 const CHAR_DISCARD_CUTSET = "{} \r\n"
+const NODE_TYPE_CAMERAS = "cameras"
+const NODE_TYPE_CORDON = "cordon"
+const NODE_TYPE_CORDONS = "cordons"
+const NODE_TYPE_ENTITY = "entity"
+const NODE_TYPE_VERSIONINFO = "versioninfo"
+const NODE_TYPE_VIEWSETTINGS = "viewsettings"
+const NODE_TYPE_VISGROUPS = "visgroups"
+const NODE_TYPE_WORLD = "world"
 
 type Reader struct {
 	file *os.File
@@ -25,27 +33,48 @@ func NewReader(file *os.File) Reader {
 
 // Read buffer file into our defined structures
 // Returns a fully mapped Vmf structure
-func (reader *Reader) Read() Vmf {
+func (reader *Reader) Read() (vmf Vmf, err error) {
 	bufReader := bufio.NewReader(reader.file)
 
 	rootNode := Node{
-		Key: reader.file.Name(),
+		key: reader.file.Name(),
 	}
 
 	readScope(bufReader, &rootNode)
 
-	return Vmf{}
-}
+	for _,n := range rootNode.value {
+		node := n.(Node)
+		switch node.key {
+		case NODE_TYPE_CAMERAS:
+			vmf.Cameras = node
+			break
+		case NODE_TYPE_CORDON:
+			vmf.Cordon = node
+			break
+		case NODE_TYPE_CORDONS:
+			vmf.Cordons = node
+			break
+		case NODE_TYPE_ENTITY:
+			vmf.Entities = append(vmf.Entities, node)
+			break
+		case NODE_TYPE_VERSIONINFO:
+			vmf.VersionInfo = node
+			break
+		case NODE_TYPE_VIEWSETTINGS:
+			vmf.ViewSettings = node
+			break
+		case NODE_TYPE_VISGROUPS:
+			vmf.ViewSettings = node
+			break
+		case NODE_TYPE_WORLD:
+			vmf.World = node
+			break
+		default:
+			break
+		}
+	}
 
-// A KeyValue object, that may hold multiple Values
-type Node struct {
-	Key string
-	Values []interface{}
-}
-// A KeyValue object, can only hold a single Value
-type Property struct {
-	Key string
-	Value interface{}
+	return vmf,err
 }
 
 // Read a single scope
@@ -84,17 +113,17 @@ func readScope(reader *bufio.Reader, scope *Node) *Node {
 				}
 			}
 
-			scope.Values = append(scope.Values,
-				Property{
-					Key: p[1],
-					Value: p[3],
-				})
+			node := Node{
+				key: p[1],
+			}
+			node.value = append(node.value, p[3])
+			scope.value = append(scope.value, node)
 			continue
 		} else {
 			// Name for new scope.
 			newScope := Node{}
-			newScope.Key = strings.Trim(line, CHAR_DISCARD_CUTSET)
-			scope.Values = append(scope.Values, readScope(reader, &newScope))
+			newScope.key = strings.TrimSpace(strings.Trim(line, CHAR_DISCARD_CUTSET))
+			scope.value = append(scope.value, *readScope(reader, &newScope))
 		}
 	}
 
