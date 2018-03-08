@@ -1,4 +1,4 @@
-package vmf
+package types
 
 type ViewSettings struct {
 	SnapToGrid bool

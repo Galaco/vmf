@@ -1,13 +1,10 @@
-package vmf
+package types
 
-import (
-	"github.com/galaco/vmf/types"
-)
 
 type Cordon struct {
 	Active bool
-	Mins types.Vectorf32
-	Maxs types.Vectorf32
+	Mins Vectorf32
+	Maxs Vectorf32
 }
 
 // L4D onwards uses a newer Cordons structure
@@ -18,6 +15,6 @@ type Cordons struct {
 }
 
 type CordonBox struct {
-	Mins types.Vectorf32
-	Maxs types.Vectorf32
+	Mins Vectorf32
+	Maxs Vectorf32
 }

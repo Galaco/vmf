@@ -1,16 +1,14 @@
-package vmf
-
-import "github.com/galaco/vmf/types"
+package types
 
 type World struct {
-	KeyValues types.KeyValues
+	KeyValues KeyValues
 	Solids []Solid
 }
 
 type Solid struct {
 	Id int
 	Sides []Side
-	Editor types.Editor
+	Editor Editor
 }
 
 type Side struct {
@@ -27,7 +25,7 @@ type Side struct {
 
 type DispInfo struct {
 	Power int
-	StartPosition types.Vectorf32
+	StartPosition Vectorf32
 	Elevation float32
 	SubDiv bool
 	Normals []Normal
@@ -41,7 +39,7 @@ type DispInfo struct {
 
 type Normal struct {
 	Id string
-	Values []types.Vectorf32
+	Values []Vectorf32
 }
 
 type Distance struct {
@@ -51,7 +49,7 @@ type Distance struct {
 
 type Offset struct {
 	Id string
-	Values []types.Vectorf32
+	Values []Vectorf32
 }
 
 type Alpha struct {

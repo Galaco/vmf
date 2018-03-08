@@ -1,4 +1,4 @@
-package vmf
+package types
 
 
 type VersionInfo struct {

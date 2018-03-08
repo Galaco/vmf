@@ -1,10 +1,8 @@
-package vmf
-
-import "github.com/galaco/vmf/types"
+package types
 
 type VisGroup struct {
 	Name string
 	Id int
-	Color types.RGB
+	Color RGB
 	Children []VisGroup
 }
