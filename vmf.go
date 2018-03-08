@@ -3,9 +3,9 @@ package vmf
 type Vmf struct {
 	VersionInfo Node
 	ViewSettings Node
-	VisGroup []Node
+	VisGroup Node
 	World Node
-	Entities []Node
+	Entities Node
 	Cameras Node
 	Cordon Node // Pre-L4D only
 	Cordons Node // Post-L4D only

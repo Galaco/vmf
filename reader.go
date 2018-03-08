@@ -55,7 +55,7 @@ func (reader *Reader) Read() (vmf Vmf, err error) {
 			vmf.Cordons = node
 			break
 		case NODE_TYPE_ENTITY:
-			vmf.Entities = append(vmf.Entities, node)
+			vmf.Entities.value = append(vmf.Entities.value, node)
 			break
 		case NODE_TYPE_VERSIONINFO:
 			vmf.VersionInfo = node
@@ -63,11 +63,11 @@ func (reader *Reader) Read() (vmf Vmf, err error) {
 		case NODE_TYPE_VIEWSETTINGS:
 			vmf.ViewSettings = node
 			break
-		case NODE_TYPE_VISGROUPS:
-			vmf.ViewSettings = node
-			break
 		case NODE_TYPE_WORLD:
 			vmf.World = node
+			break
+		case NODE_TYPE_VISGROUPS:
+			vmf.VisGroup.value = append(vmf.VisGroup.value, node)
 			break
 		default:
 			break
