@@ -18,7 +18,7 @@ func main() {
 	reader := vmf.NewReader(file)
 	f,_ := reader.Read()
 
-	fmt.Println(f.Entities[0].GetProperty("classname"))
-	fmt.Println(f.Entities[0].GetChildrenOfType("solid"))
+	fmt.Println(f.Entities.GetChildrenOfType("entity")[0].GetProperty("classname"))
+	fmt.Println(f.Entities.GetChildrenOfType("entity")[0].GetChildrenOfType("solid"))
 }
 ```
