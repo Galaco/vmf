@@ -1,7 +1,6 @@
 package vmf
 
 import (
-	"os"
 	"strings"
 	"bufio"
 	"io"
@@ -19,13 +18,14 @@ const NODE_TYPE_VERSIONINFO = "versioninfo"
 const NODE_TYPE_VIEWSETTINGS = "viewsettings"
 const NODE_TYPE_VISGROUPS = "visgroups"
 const NODE_TYPE_WORLD = "world"
+const NODE_KEY_ROOT = "$root"
 
 type Reader struct {
-	file *os.File
+	file io.Reader
 }
 
 // Return a new Vmf Reader
-func NewReader(file *os.File) Reader {
+func NewReader(file io.Reader) Reader {
 	reader := Reader{}
 	reader.file = file
 	return reader
@@ -37,7 +37,7 @@ func (reader *Reader) Read() (vmf Vmf, err error) {
 	bufReader := bufio.NewReader(reader.file)
 
 	rootNode := Node{
-		key: reader.file.Name(),
+		key: "$root",
 	}
 
 	readScope(bufReader, &rootNode)
@@ -70,6 +70,7 @@ func (reader *Reader) Read() (vmf Vmf, err error) {
 			vmf.VisGroup.value = append(vmf.VisGroup.value, node)
 			break
 		default:
+			vmf.Unclassified.value = append(vmf.Unclassified.value, node)
 			break
 		}
 	}
@@ -91,6 +92,11 @@ func readScope(reader *bufio.Reader, scope *Node) *Node {
 		// New scope
 		if strings.Contains(line, CHAR_ENTER_SCOPE) {
 			// Scope is opened when the key is read
+			// There may be situations where there is no key, so we must account for that
+			if (len(*scope.GetAllValues()) > 0 && scope.key == "") || scope.key == NODE_KEY_ROOT{
+				newScope := Node{}
+				scope.value = append(scope.value, *readScope(reader, &newScope))
+			}
 			continue
 		} else
 		// Exit scope

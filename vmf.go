@@ -9,6 +9,7 @@ type Vmf struct {
 	Cameras Node
 	Cordon Node // Pre-L4D only
 	Cordons Node // Post-L4D only
+	Unclassified Node
 }
 
 // A KeyValue object, that may hold multiple Values
