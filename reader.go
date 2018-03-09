@@ -105,11 +105,12 @@ func readScope(reader *bufio.Reader, scope *Node) *Node {
 				// Read lines until we encounter a closing quote.
 				for {
 					line,_ = reader.ReadString('\n')
-					p[3] += line
 
 					if strings.Contains(line, CHAR_ESCAPE) == true {
+						p[3] += strings.Split(line, CHAR_ESCAPE)[0]
 						break
 					}
+					p[3] += line
 				}
 			}
 

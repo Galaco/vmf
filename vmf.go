@@ -16,11 +16,25 @@ type Node struct {
 	key string
 	value []interface{}
 }
+
+// Get node key
+func (node *Node) GetKey() *string {
+	return &node.key
+}
+
+// Get all node values
+func (node *Node) GetAllValues() *[]interface{} {
+	return &node.value
+}
+
+// Check if Node has a property defined
 func (node *Node) HasProperty(name string) bool {
 	v := node.GetProperty(name)
 	return v != ""
 }
 
+// Return the value of a property from its name
+// Note: A property is a string:string, not a string:[]Node
 func (node *Node) GetProperty(name string) string {
 	for _,child := range node.value {
 		n,_ := child.(Node)
@@ -31,7 +45,9 @@ func (node *Node) GetProperty(name string) string {
 	return ""
 }
 
-func (node *Node) GetChildrenOfType(name string) (children []Node) {
+// Return all children of a given type for a node.
+// This is different from properties, as a property is a string:string
+func (node *Node) GetChildrenByKey(name string) (children []Node) {
 	for _,child := range node.value {
 		n,_ := child.(Node)
 		if n.key == name {
