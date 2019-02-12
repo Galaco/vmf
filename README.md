@@ -1,3 +1,7 @@
+[![GoDoc](https://godoc.org/github.com/Galaco/vmf?status.svg)](https://godoc.org/github.com/Galaco/vmf)
+[![Go report card](https://goreportcard.com/badge/github.com/galaco/vmf)](https://goreportcard.com/badge/github.com/galaco/vmf)
+[![Build Status](https://travis-ci.com/Galaco/vmf.svg?branch=master)](https://travis-ci.com/Galaco/vmf)
+
 # vmf
 Golang library for manipulating hammer Editor .vmf map files
 

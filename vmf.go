@@ -1,20 +1,20 @@
 package vmf
 
 type Vmf struct {
-	VersionInfo Node
+	VersionInfo  Node
 	ViewSettings Node
-	VisGroup Node
-	World Node
-	Entities Node
-	Cameras Node
-	Cordon Node // Pre-L4D only
-	Cordons Node // Post-L4D only
+	VisGroup     Node
+	World        Node
+	Entities     Node
+	Cameras      Node
+	Cordon       Node // Pre-L4D only
+	Cordons      Node // Post-L4D only
 	Unclassified Node
 }
 
 // A KeyValue object, that may hold multiple Values
 type Node struct {
-	key string
+	key   string
 	value []interface{}
 }
 
@@ -37,8 +37,8 @@ func (node *Node) HasProperty(name string) bool {
 // Return the value of a property from its name
 // Note: A property is a string:string, not a string:[]Node
 func (node *Node) GetProperty(name string) string {
-	for _,child := range node.value {
-		n,_ := child.(Node)
+	for _, child := range node.value {
+		n, _ := child.(Node)
 		if n.key == name {
 			return (n.value[0]).(string)
 		}
@@ -49,8 +49,8 @@ func (node *Node) GetProperty(name string) string {
 // Return all children of a given type for a node.
 // This is different from properties, as a property is a string:string
 func (node *Node) GetChildrenByKey(name string) (children []Node) {
-	for _,child := range node.value {
-		n,_ := child.(Node)
+	for _, child := range node.value {
+		n, _ := child.(Node)
 		if n.key == name {
 			children = append(children, n)
 		}

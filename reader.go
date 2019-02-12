@@ -1,9 +1,9 @@
 package vmf
 
 import (
-	"strings"
 	"bufio"
 	"io"
+	"strings"
 )
 
 const CHAR_ENTER_SCOPE = "{"
@@ -42,40 +42,31 @@ func (reader *Reader) Read() (vmf Vmf, err error) {
 
 	readScope(bufReader, &rootNode)
 
-	for _,n := range rootNode.value {
+	for _, n := range rootNode.value {
 		node := n.(Node)
 		switch node.key {
 		case NODE_TYPE_CAMERAS:
 			vmf.Cameras = node
-			break
 		case NODE_TYPE_CORDON:
 			vmf.Cordon = node
-			break
 		case NODE_TYPE_CORDONS:
 			vmf.Cordons = node
-			break
 		case NODE_TYPE_ENTITY:
 			vmf.Entities.value = append(vmf.Entities.value, node)
-			break
 		case NODE_TYPE_VERSIONINFO:
 			vmf.VersionInfo = node
-			break
 		case NODE_TYPE_VIEWSETTINGS:
 			vmf.ViewSettings = node
-			break
 		case NODE_TYPE_WORLD:
 			vmf.World = node
-			break
 		case NODE_TYPE_VISGROUPS:
 			vmf.VisGroup.value = append(vmf.VisGroup.value, node)
-			break
 		default:
 			vmf.Unclassified.value = append(vmf.Unclassified.value, node)
-			break
 		}
 	}
 
-	return vmf,err
+	return vmf, err
 }
 
 // Read a single scope
@@ -84,7 +75,7 @@ func (reader *Reader) Read() (vmf Vmf, err error) {
 // Param: scope is the current scope to write to
 func readScope(reader *bufio.Reader, scope *Node) *Node {
 	for {
-		line,err := reader.ReadString('\n')
+		line, err := reader.ReadString('\n')
 		if err == io.EOF {
 			break
 		}
@@ -93,7 +84,7 @@ func readScope(reader *bufio.Reader, scope *Node) *Node {
 		if strings.Contains(line, CHAR_ENTER_SCOPE) {
 			// Scope is opened when the key is read
 			// There may be situations where there is no key, so we must account for that
-			if (len(*scope.GetAllValues()) > 0 && scope.key == "") || scope.key == NODE_KEY_ROOT{
+			if (len(*scope.GetAllValues()) > 0 && scope.key == "") || scope.key == NODE_KEY_ROOT {
 				newScope := Node{}
 				scope.value = append(scope.value, *readScope(reader, &newScope))
 			}
@@ -104,15 +95,15 @@ func readScope(reader *bufio.Reader, scope *Node) *Node {
 			break
 		} else
 		// Is a property
-		if strings.Contains(line, CHAR_ESCAPE) == true {
+		if strings.Contains(line, CHAR_ESCAPE) {
 			p := strings.Split(line, CHAR_ESCAPE)
 			if strings.Count(line, CHAR_ESCAPE) == 3 {
 				// Multi-line property value, because value quotes aren't closed.
 				// Read lines until we encounter a closing quote.
 				for {
-					line,_ = reader.ReadString('\n')
+					line, _ = reader.ReadString('\n')
 
-					if strings.Contains(line, CHAR_ESCAPE) == true {
+					if strings.Contains(line, CHAR_ESCAPE) {
 						p[3] += strings.Split(line, CHAR_ESCAPE)[0]
 						break
 					}
